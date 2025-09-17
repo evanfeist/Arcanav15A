@@ -334,6 +334,7 @@
   const rnd=n=>Math.floor(Math.random()*n);
 // === Card images ===
 const IMG_BASE = "cards/";
+const EXT = ".webp"; // change to ".png" if your files are PNG
 
 function suitSlug(s){
   return s==='\u2665' ? 'hearts'
@@ -341,11 +342,19 @@ function suitSlug(s){
        : s==='\u2663' ? 'clubs'
        :                 'spades';
 }
-function rankSlug(r){ return r; } // "A","2"..,"10","J","Q","K"
+
+function rankSlug(r){
+  if (r === 'A') return 'ace';
+  if (r === 'J') return 'j';
+  if (r === 'Q') return 'q';
+  if (r === 'K') return 'k';
+  return r; // "2".."10"
+}
 
 function imgPath(c){
-  if (c.back) return IMG_BASE + "back.webp";
-  return IMG_BASE + rankSlug(c.rank) + " " + suitSlug(c.suit) + ".webp";
+  if (c.back) return IMG_BASE + "back" + EXT;
+  if (isPage(c)) return IMG_BASE + `page ${c.pageIndex}` + EXT;
+  return IMG_BASE + `${rankSlug(c.rank)} ${suitSlug(c.suit)}` + EXT;
 }
 
   // Preferences
@@ -478,7 +487,27 @@ function imgPath(c){
   const G={deck:[],discard:[],players:[{hand:[],score:0},{hand:[],score:0}],turn:0,started:false,selected:new Set(),chooseGive:null,aceQuery:null,clubChain:0};
   const Prev={handCounts:[0,0]};
 
-  function buildDeck(){const cards=[];let id=1;for(let d=0;d<2;d++){for(const s of SUITS){for(const r of RANKS){cards.push({id:id++,suit:s,rank:r});}}cards.push({id:id++,suit:'★',rank:'Page',page:true});cards.push({id:id++,suit:'☆',rank:'Page',page:true});}shuffle(cards);return cards;}
+  function buildDeck(){
+  const cards=[]; 
+  let id=1;
+
+  // Two copies of every suit card (A–K for each suit)
+  for(let copies=0; copies<2; copies++){
+    for (const s of SUITS){
+      for (const r of RANKS){
+        cards.push({ id:id++, suit:s, rank:r });
+      }
+    }
+  }
+
+  // Four Pages (Jokers) named "page 1"..."page 4"
+  for (let i=1; i<=4; i++){
+    cards.push({ id:id++, page:true, rank:'Page', suit:'', pageIndex:i });
+  }
+
+  shuffle(cards);
+  return cards;
+}
   function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];}}
 
   // === SAVE/LOAD (guest-online doesn’t persist full state)
