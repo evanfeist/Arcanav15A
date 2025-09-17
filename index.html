@@ -12,6 +12,7 @@
       --shadow: 0 10px 30px rgba(0,0,0,.35);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
       --safe-top: env(safe-area-inset-top, 0px);
+--cardRatio: 63/112;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -296,6 +297,21 @@
   const isPage=c=>c.page===true; // “Page” = Joker
   const isJQK=r=>r==='J'||r==='Q'||r==='K';
   const rnd=n=>Math.floor(Math.random()*n);
+// === Card images ===
+const IMG_BASE = "cards/";
+
+function suitSlug(s){
+  return s==='\u2665' ? 'hearts'
+       : s==='\u2666' ? 'diamonds'
+       : s==='\u2663' ? 'clubs'
+       :                 'spades';
+}
+function rankSlug(r){ return r; } // "A","2"..,"10","J","Q","K"
+
+function imgPath(c){
+  if (c.back) return IMG_BASE + "back.webp";
+  return `${IMG_BASE}${rankSlug(c.rank)}_${suitSlug(c.suit)}.webp`;
+}
 
   // Preferences
   const PREF_KEY='arcana_prefs_v2';
@@ -509,7 +525,24 @@
     ['btnStart','mbStart'].forEach(id=>{ const el=$(id); if(el){ el.disabled=shouldDisableStart; el.setAttribute('aria-disabled', String(shouldDisableStart)); }});
   }
 
-  function cardNode(c,show){const d=document.createElement('div');d.className='card';const t=typeOf(c);if(show){const r=document.createElement('div');r.className='rank';r.textContent=c.rank;d.appendChild(r);const s=document.createElement('div');s.className='suit';s.textContent=c.suit;d.appendChild(s);if(t!=='Normal'){const tag=document.createElement('div');tag.className='tag';tag.textContent=t;d.appendChild(tag);}d.setAttribute('role','button');d.setAttribute('aria-pressed', G.selected.has(c.id)?'true':'false');}else{d.classList.add('back');}return d;}
+  function cardNode(c, show){
+  const d=document.createElement('div');
+  d.className='card';
+  const t=typeOf(c);
+
+  if(show){
+    d.style.backgroundImage = `url("${imgPath(c)}")`;
+    const r=document.createElement('div'); r.className='rank'; r.textContent=c.rank; d.appendChild(r);
+    const s=document.createElement('div'); s.className='suit'; s.textContent=c.suit; d.appendChild(s);
+    if(t!=='Normal'){ const tag=document.createElement('div'); tag.className='tag'; tag.textContent=t; d.appendChild(tag); }
+    d.setAttribute('role','button');
+    d.setAttribute('aria-pressed', G.selected.has(c.id)?'true':'false');
+  } else {
+    d.classList.add('back');
+    d.style.backgroundImage = `url("${IMG_BASE}back.webp")`;
+  }
+  return d;
+}
   function toggleSelect(id,node){
     if(G.turn!==myPid()) return;
     if(G.selected.has(id)){ G.selected.delete(id); node.classList.remove('selected'); node.setAttribute('aria-pressed','false'); }
