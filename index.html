@@ -565,7 +565,10 @@ function imgPath(c){
     $('youCount').textContent=G.players[myPid()].hand.length;
 
     // Opponent hand backs
-    G.players[1-myPid()].hand.forEach(_=>{const d=document.createElement('div');d.className='card back';ah.appendChild(d);});
+G.players[1-myPid()].hand.forEach(_=>{
+  const d = cardNode({ back:true }, false); // 
+  ah.appendChild(d);
+});
     $('aiCount').textContent=G.players[1-myPid()].hand.length;
 
     // Deal-in animation when counts increase
