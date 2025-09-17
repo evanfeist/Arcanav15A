@@ -33,10 +33,10 @@
     .hand{display:flex;flex-wrap:wrap;gap:10px;padding:12px}
     .card{
   width: var(--cardW, clamp(64px, 22vw, 92px));
-  aspect-ratio: var(--cardRatio, 63/112);   /* tarot-ish */
+  aspect-ratio: var(--cardRatio, 63/112);
   border-radius: 12px;
-  background: var(--card);
-  background-size: cover;                   /* make art fill the card */
+  background-color: var(--card);
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   border: 1px solid var(--border);
@@ -48,13 +48,10 @@
   touch-action: manipulation;
   transition: transform .18s ease, background .18s ease;
 }
-    .card:active{transform:translateY(1px)}
-    .card:hover{background:var(--card-h)}
-    .card.selected{outline:3px solid var(--sel)}
-    .rank{position:absolute;top:8px;left:10px;font-weight:800}
-    .suit{position:absolute;bottom:8px;right:10px;font-size:20px}
-    .tag{position:absolute;bottom:8px;left:10px;font-size:10px;padding:2px 6px;border:1px solid var(--border);border-radius:999px;color:var(--sub);background:#0e1622}
-    .back{ background: none; border:1px solid #1f2a3b }
+.card:active{transform:translateY(1px)}
+.card:hover{ background-color: var(--card-h); }
+.card.selected{outline:3px solid var(--sel)}
+.back{ background-color: transparent; border:1px solid #1f2a3b }
 
     .panel{padding:10px}
     #log{max-height:280px;overflow:auto;padding:10px;background:#0c121c;border-top:1px solid var(--border)}
@@ -326,7 +323,7 @@ function rankSlug(r){ return r; } // "A","2"..,"10","J","Q","K"
 
 function imgPath(c){
   if (c.back) return IMG_BASE + "back.webp";
-  return `${IMG_BASE}${rankSlug(c.rank)} ${suitSlug(c.suit)}.webp`;
+  return IMG_BASE + rankSlug(c.rank) + " " + suitSlug(c.suit) + ".webp";
 }
 
   // Preferences
@@ -585,11 +582,13 @@ function imgPath(c){
     if(sameSuit&&cards.length>=3){const vals=non.map(c=>RVAL(c.rank)).sort((a,b)=>a-b);let gaps=0;for(let i=1;i<vals.length;i++){const diff=vals[i]-vals[i-1];if(diff<=0){res.reason='Duplicate ranks in run';return res;}gaps+=(diff-1);}if(gaps<=pages.length){res.valid=true;res.kind='RUN';const sum=non.reduce((s,c)=>s+RVAL(c.rank),0);res.points=sum+cards.length;if(pages.length===0)applySuitBonus(res,true);else res.points-=pages.length;return res;}}
     res.reason='Not a valid Construct';return res;
   }
-  function applySuitBonus(res,allow){if(!res.suit||!allow)return; if(res.suit === '\u2665'){ res.points += 3; res.suitBonus = 'HEARTS'; }   // ♥
-if(res.suit === '\u2663'){ res.suitBonus = 'CLUBS'; }                     // ♣
-if(res.suit === '\u2666'){ res.suitBonus = 'DIAMONDS'; }                  // ♦
-if(res.suit === '\u2660'){ res.suitBonus = 'SPADES'; }                    // ♠
-
+function applySuitBonus(res, allow){
+  if (!res.suit || !allow) return;
+  if (res.suit === '\u2665'){ res.points += 3; res.suitBonus = 'HEARTS'; }
+  if (res.suit === '\u2663'){ res.suitBonus = 'CLUBS'; }
+  if (res.suit === '\u2666'){ res.suitBonus = 'DIAMONDS'; }
+  if (res.suit === '\u2660'){ res.suitBonus = 'SPADES'; }
+}
   function currentSelected(pid){const ids=[...G.selected];return G.players[pid].hand.filter(c=>ids.includes(c.id));}
   function attemptConstruct(pid){const cards=currentSelected(pid);if(cards.length<2){log('Select 2+ cards for a construct');return null;}const check=validateConstruct(cards);if(!check.valid){log(check.reason||'Invalid construct');return null;}
     if(check.jokersUsed>0&&check.kind!=='PAGE_ONLY'){const excluded=new Set(cards.map(c=>c.id));const pool=G.players[pid].hand.filter(c=>!excluded.has(c.id)&&!isPage(c));if(pool.length<check.jokersUsed){log('Not enough cards to pay Page cost');return null;}
