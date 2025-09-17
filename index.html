@@ -596,28 +596,37 @@
   }
 
   function cardNode(c, show){
-    const d=document.createElement('div');
-    d.className='card';
-    const t=typeOf(c);
+  const d=document.createElement('div');
+  d.className='card';
+  const t=typeOf(c);
 
-    if(show){
-      d.style.backgroundImage = `url("${imgPath(c)}")`;
+  if(show){
+    d.style.backgroundImage = `url("${imgPath(c)}")`;
 
-      // One bottom-left chip: "Q♣", "10♦", etc.
+    // Bottom-left chip: always for non-Page cards
+    if (!isPage(c)) {
       const chip = document.createElement('div');
       chip.className = 'rank';
       chip.textContent = `${c.rank ?? ''}${suitGlyph(c.suit || '')}`;
       d.appendChild(chip);
-
-      if(t!=='Normal'){ const tag=document.createElement('div'); tag.className='tag'; tag.textContent=t; d.appendChild(tag); }
-      d.setAttribute('role','button');
-      d.setAttribute('aria-pressed', G.selected.has(c.id)?'true':'false');
-    } else {
-      d.classList.add('back');
-      d.style.backgroundImage = `url("${IMG_BASE}back${EXT}")`;
     }
-    return d;
+
+    // ⬇️ Change this: only tag Pages (so 6/7/9 won’t say "Action")
+    if (t === 'Page') {
+      const tag = document.createElement('div');
+      tag.className = 'tag';
+      tag.textContent = t;
+      d.appendChild(tag);
+    }
+
+    d.setAttribute('role','button');
+    d.setAttribute('aria-pressed', G.selected.has(c.id)?'true':'false');
+  } else {
+    d.classList.add('back');
+    d.style.backgroundImage = `url("${IMG_BASE}back${EXT}")`;
   }
+  return d;
+}
 
   function toggleSelect(id,node){
     if(G.turn!==myPid()) return;
