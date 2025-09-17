@@ -326,7 +326,7 @@ function rankSlug(r){ return r; } // "A","2"..,"10","J","Q","K"
 
 function imgPath(c){
   if (c.back) return IMG_BASE + "back.webp";
-  return `${IMG_BASE}${rankSlug(c.rank)}_${suitSlug(c.suit)}.webp`;
+  return `${IMG_BASE}${rankSlug(c.rank)} ${suitSlug(c.suit)}.webp`;
 }
 
   // Preferences
