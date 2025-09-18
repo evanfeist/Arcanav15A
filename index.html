@@ -266,20 +266,115 @@
       <button id="rulesClose">Close</button>
     </header>
     <div class="body" style="font-size:14px;color:var(--sub)">
-      <p><strong>Goal:</strong> Reach 60 points.</p>
-      <ul>
-        <li>End of your turn: draw 1. If you start a turn with ≤1 card: draw 3 (safety).</li>
-        <li><strong>Constructs</strong>: Pair 2 / True Pair 5 (+ suit bonus). Sets & Runs per rules. Using Pages: discard 1 extra card per Page and −1 point per Page.</li>
-        <li><strong>Runs + Pages</strong>: Pages fill gaps; +1 per Page; no suit bonus if any Page used.</li>
-        <li><strong>Sets + Pages</strong>: suit bonus only if size ≥5.</li>
-        <li><strong>Suit bonuses</strong>: ♥ +3, ♣ extra turn (cap 2), ♦ d6 steal 1/2/3, ♠ steal up to 2 random cards.</li>
-        <li><strong>Actions</strong>: 6 draw2; 7 steal; 9 swap (9 is discarded; if blocked your give-card is discarded, otherwise it goes to defender).</li>
-        <li><strong>Ace vs 7/9</strong>: d6 → 1–3 fail (action proceeds), 4–6 block + counter +1.</li>
-        <li><strong>Sigils (J/Q/K)</strong>: points (J+1/Q+2/K+3) or draw (J/Q +1, K +2). Two Aces auto-block & discard Sigil.</li>
-        <li><strong>Discard</strong>: toss any card for +1 point.</li>
+  <div style="display:grid;gap:10px">
+    
+    <section style="background:#0e1622;border:1px solid var(--border);border-radius:12px;padding:12px">
+      <h4 style="margin:0 0 6px 0;color:var(--ink)">🎯 Goal</h4>
+      <p style="margin:0">Reach <strong>60 points</strong> before your opponent.</p>
+    </section>
+
+    <section style="background:#0e1622;border:1px solid var(--border);border-radius:12px;padding:12px">
+      <h4 style="margin:0 0 6px 0;color:var(--ink)">🔄 Turn Flow</h4>
+      <ul style="margin:0 0 0 1rem;padding:0">
+        <li>End of your turn: <strong>draw 1</strong>.</li>
+        <li>If you start a turn with ≤ 1 card: <strong>draw 3</strong> (safety).</li>
+        <li>New game: deal 7 each. P1 starts.</li>
       </ul>
-    </div>
+    </section>
+
+    <section style="background:#0e1622;border:1px solid var(--border);border-radius:12px;padding:12px">
+      <h4 style="margin:0 0 6px 0;color:var(--ink)">🧩 Constructs (score to discard pile)</h4>
+      <div style="display:grid;gap:8px">
+        <div>
+          <strong>Pairs</strong>
+          <ul style="margin:4px 0 0 1rem;padding:0">
+            <li><strong>Pair</strong> (2 of same rank): <strong>2</strong> pts</li>
+            <li><strong>True Pair</strong> (same rank + same suit): <strong>5</strong> pts</li>
+          </ul>
+        </div>
+        <div>
+          <strong>Sets</strong> (3+ of the same rank)
+          <ul style="margin:4px 0 0 1rem;padding:0">
+            <li>3 cards: <code>2 × rank + 2</code> pts</li>
+            <li>4 cards: if all four suits present → <code>4 × rank</code>, else <code>3 × rank</code></li>
+            <li>5+ cards: <code>3 × rank + 2</code> pts</li>
+            <li><em>Suit bonus</em> applies if all non-Page cards are the same suit (see Suit Bonuses). With Pages in a Set, suit bonus only applies if size ≥ 5.</li>
+          </ul>
+        </div>
+        <div>
+          <strong>Runs</strong> (3+ in sequence, same suit)
+          <ul style="margin:4px 0 0 1rem;padding:0">
+            <li>Score = sum of ranks + <code>+1</code> per card</li>
+            <li>Pages (Jokers) can fill gaps; if any Page is used: <strong>no suit bonus</strong> and <strong>−1 point per Page</strong></li>
+          </ul>
+        </div>
+        <div>
+          <strong>Using Pages (Jokers)</strong> in any non–Page-only construct
+          <ul style="margin:4px 0 0 1rem;padding:0">
+            <li>For each Page used: you must discard <strong>one extra</strong> other card (Page cost)</li>
+            <li>For each Page used: total points get <strong>−1</strong></li>
+          </ul>
+        </div>
+        <div>
+          <strong>Page-only plays</strong> (discard these Pages to score)
+          <ul style="margin:4px 0 0 1rem;padding:0">
+            <li>2 Pages → <strong>4</strong> pts</li>
+            <li>3 Pages → <strong>7</strong> pts and <strong>draw 3</strong></li>
+            <li>4 Pages → <strong>15</strong> pts and <strong>refill hand to 7</strong></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#0e1622;border:1px solid var(--border);border-radius:12px;padding:12px">
+      <h4 style="margin:0 0 6px 0;color:var(--ink)">♥ ♣ ♦ ♠ Suit Bonuses</h4>
+      <ul style="margin:0 0 0 1rem;padding:0">
+        <li><strong>♥ Hearts</strong>: +3 pts</li>
+        <li><strong>♣ Clubs</strong>: take an extra turn (cap 2 in a row)</li>
+        <li><strong>♦ Diamonds</strong>: roll d6 → steal <strong>1/2/3</strong> points from opponent’s score</li>
+        <li><strong>♠ Spades</strong>: steal up to <strong>2 random cards</strong> from opponent’s hand</li>
+      </ul>
+      <p style="margin:6px 0 0 0;font-size:12px;opacity:.9">Suit bonus applies to Constructs where all non-Page cards share that suit (see Pages notes under Sets/Runs).</p>
+    </section>
+
+    <section style="background:#0e1622;border:1px solid var(--border);border-radius:12px;padding:12px">
+      <h4 style="margin:0 0 6px 0;color:var(--ink)">🎭 Actions (6 / 7 / 9)</h4>
+      <ul style="margin:0 0 0 1rem;padding:0">
+        <li><strong>6</strong>: Draw 2</li>
+        <li><strong>7</strong>: Steal 1 random card (Ace can attempt to block)</li>
+        <li><strong>9</strong>: Swap — give 1, take 1 (Ace can attempt to block)
+          <ul style="margin:4px 0 0 1rem;padding:0">
+            <li>If 9 is blocked: your “give” card is discarded</li>
+            <li>If 9 is not blocked: your “give” card goes to the defender</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <section style="background:#0e1622;border:1px solid var(--border);border-radius:12px;padding:12px">
+      <h4 style="margin:0 0 6px 0;color:var(--ink)">🂱 Aces (Defense & Counter)</h4>
+      <ul style="margin:0 0 0 1rem;padding:0">
+        <li>Against <strong>7/9</strong>: roll d6 → <strong>1–3 fail</strong> (action proceeds), <strong>4–6 block</strong> and you gain <strong>+1</strong> point</li>
+        <li>Against a <strong>Sigil</strong>: discard <strong>2 Aces</strong> to auto-block (Sigil is discarded)</li>
+      </ul>
+    </section>
+
+    <section style="background:#0e1622;border:1px solid var(--border);border-radius:12px;padding:12px">
+      <h4 style="margin:0 0 6px 0;color:var(--ink)">👑 Sigils (J / Q / K)</h4>
+      <ul style="margin:0 0 0 1rem;padding:0">
+        <li><strong>Points</strong>: J +1, Q +2, K +3</li>
+        <li><strong>Draw</strong>: J/Q +1, K +2</li>
+        <li>Opponent may auto-block by discarding <strong>2 Aces</strong></li>
+      </ul>
+    </section>
+
+    <section style="background:#0e1622;border:1px solid var(--border);border-radius:12px;padding:12px">
+      <h4 style="margin:0 0 6px 0;color:var(--ink)">📦 Discard</h4>
+      <p style="margin:0">Discard any 1 card to gain <strong>+1 point</strong>.</p>
+    </section>
+
   </div>
+</div>
 
   <!-- Settings Drawer -->
   <div class="drawer" id="settingsDrawer" aria-label="Settings">
