@@ -56,6 +56,15 @@
     .card:hover{ background-color: var(--card-h); }
     .card.selected{outline:3px solid var(--sel)}
     .back{ background-color: transparent; border:1px solid #1f2a3b }
+    .card.selected{
+  outline:3px solid var(--sel);
+  box-shadow:0 0 0 3px var(--sel), 0 10px 24px rgba(108,196,255,.20);
+}
+
+.card:focus-visible{
+  outline:3px solid var(--sel);
+  box-shadow:0 0 0 3px var(--sel), 0 10px 24px rgba(108,196,255,.20);
+}
 
     /* Single bottom-left chip (rank + suit), black text */
     .rank{
@@ -773,7 +782,7 @@
       case 'DISCARD': {
         const c=discardFromHandById(pid,act.cardId);
         if (!c) { log('Invalid discard.'); return; }
-        G.players[pid].score+=1;bumpScore(pid);log(`${pid===0?'P1':'P2'} discarded ${c?(c.rank+suitGlyph(c.suit)):'—'} for +1.`);
+        G.players[pid].score+=1;bumpScore(pid);llog(`${pid===0?'P1':'P2'} discarded ${c ? (c.rank + suitGlyph(c.suit)) : '—'} for +1.`);
         if(G.players[pid].score>=60){log(`${pid===0?'P1':'P2'} win (60)!`);buzz(60);G.started=false;render();saveState(); if(Net.isOnline()&&Pref.role==='host'){sendSync(1);} return;}
         G.selected.clear();
         endTurn();return;
